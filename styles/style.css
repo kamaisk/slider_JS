@@ -138,7 +138,8 @@ body {
     display: flex;
     flex-direction: row;
     align-items: start;
-    gap: 60.5px;
+    flex-wrap: wrap;
+    gap: 0 60.5px;
     cursor: pointer;
 }
 
