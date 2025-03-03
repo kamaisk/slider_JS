@@ -122,44 +122,61 @@ function initSlider(options) {
 
     // ВЫВОД ОПИСАНИЯ СЛАЙДЕРА
     // ВЫВОД ГОРОДА, ВЫВОД ПЛОЩАДИ, ВЫВОД ВРЕМЕНИ РЕМОНТА, ВЫВОД СТОИМОСТИ РЕМОНТА 
+    
+    // function initDescription() {
+    //     images.forEach((image, index) => {
+    //         let cityElement = document.createElement("p");
+    //         cityElement.className = `slider__info-text slider__text n${index} ${index === 0 ? "active" : ""}`;
+    //         if (Array.isArray(image.city)) {
+    //             image.city.forEach(city => {
+    //                 let cityDiv = document.createElement("div");
+    //                 cityDiv.textContent = city;
+    //                 cityElement.appendChild(cityDiv);
+    //             })
+    //         } else {
+    //             cityElement.textContent = image.city;
+    //         }
+    //         cityElement.setAttribute("data-index", index);
+    //         sliderInfoCity.appendChild(cityElement);
+
+    //         let areaElement = document.createElement("p");
+    //         areaElement.className = `slider__info-text slider__text n${index} ${index === 0 ? "active" : ""}`;
+    //         areaElement.textContent = image.apartmentArea;
+    //         areaElement.setAttribute("data-index", index);
+    //         sliderInfoApartmentArea.appendChild(areaElement);
+
+    //         let timeElement = document.createElement("p");
+    //         timeElement.className = `slider__info-text slider__text n${index} ${index === 0 ? "active" : ""}`;
+    //         timeElement.textContent = image.repairTime;
+    //         timeElement.setAttribute("data-index", index);
+    //         sliderInfoRepairTime.appendChild(timeElement);
+
+    //         let costElement = document.createElement("p");
+    //         costElement.className = `slider__info-text slider__text n${index} ${index === 0 ? "active" : ""}`;
+    //         costElement.textContent = image.repairCost;
+    //         costElement.setAttribute("data-index", index);
+    //         sliderInfoRepairCost.appendChild(costElement);
+    //     });
+    // }
+    
+    function createInfoElement(container, text, index) {
+        let element = document.createElement("p");
+        element.className = `slider__info-text slider__text n${index} ${index === 0 ? "active" : ""}`;
+        element.textContent = text;
+        element.setAttribute("data-index", index);
+        container.appendChild(element);
+    }
     function initDescription() {
         images.forEach((image, index) => {
-            let cityElement = document.createElement("p");
-            cityElement.className = `slider__info-text slider__text n${index} ${index === 0 ? "active" : ""}`;
-            if (Array.isArray(image.city)) {
-                image.city.forEach(city => {
-                    let cityDiv = document.createElement("div");
-                    cityDiv.textContent = city;
-                    cityElement.appendChild(cityDiv);
-                })
-            } else {
-                cityElement.textContent = image.city;
-            }
-            cityElement.setAttribute("data-index", index);
-            sliderInfoCity.appendChild(cityElement);
-
-            let areaElement = document.createElement("p");
-            areaElement.className = `slider__info-text slider__text n${index} ${index === 0 ? "active" : ""}`;
-            areaElement.textContent = image.apartmentArea;
-            areaElement.setAttribute("data-index", index);
-            sliderInfoApartmentArea.appendChild(areaElement);
-
-            let timeElement = document.createElement("p");
-            timeElement.className = `slider__info-text slider__text n${index} ${index === 0 ? "active" : ""}`;
-            timeElement.textContent = image.repairTime;
-            timeElement.setAttribute("data-index", index);
-            sliderInfoRepairTime.appendChild(timeElement);
-
-            let costElement = document.createElement("p");
-            costElement.className = `slider__info-text slider__text n${index} ${index === 0 ? "active" : ""}`;
-            costElement.textContent = image.repairCost;
-            costElement.setAttribute("data-index", index);
-            sliderInfoRepairCost.appendChild(costElement);
+            createInfoElement(sliderInfoCity, Array.isArray(image.city) ? image.city.join(", ") : image.city, index);
+            createInfoElement(sliderInfoApartmentArea, image.apartmentArea, index);
+            createInfoElement(sliderInfoRepairTime, image.repairTime, index);
+            createInfoElement(sliderInfoRepairCost, image.repairCost, index);
         });
     }
 
-     // АВТОМАТИЧЕСКОЕ ПЕРЕКЛЮЧЕНИЕ СЛАЙДОВ
-     function initAutoplay() {
+    // АВТОМАТИЧЕСКОЕ ПЕРЕКЛЮЧЕНИЕ СЛАЙДОВ
+    function initAutoplay() {
         setInterval(() => {
             let curNumber = +sliderImages.querySelector(".active").dataset.index;
             let nextNumber = curNumber === images.length - 1 ? 0 : curNumber + 1;
@@ -168,28 +185,44 @@ function initSlider(options) {
     }
 
     // ПЕРЕКЛЮЧЕНИЕ СЛАЙДОВ
-    function moveSlider(num) {
-        sliderImages.querySelector(".active").classList.remove("active");
-        sliderImages.querySelector(".n" + num).classList.add("active");
-
-        sliderDots.querySelector(".active").classList.remove("active");
-        sliderDots.querySelector(".n" + num).classList.add("active");
-
-        sliderCaptions.querySelector(".active").classList.remove("active");
-        sliderCaptions.querySelector(".n" + num).classList.add("active");
-
-        sliderInfoCity.querySelector(".active").classList.remove("active");
-        sliderInfoCity.querySelector(".n" + num).classList.add("active");
-
-        sliderInfoApartmentArea.querySelector(".active").classList.remove("active");
-        sliderInfoApartmentArea.querySelector(".n" + num).classList.add("active");
-
-        sliderInfoRepairTime.querySelector(".active").classList.remove("active");
-        sliderInfoRepairTime.querySelector(".n" + num).classList.add("active");
-
-        sliderInfoRepairCost.querySelector(".active").classList.remove("active");
-        sliderInfoRepairCost.querySelector(".n" + num).classList.add("active");
+    function updateActiveClass(container, num) {
+        const activeItem = container.querySelector(".active");
+        if (activeItem) activeItem.classList.remove("active");
+        container.querySelector(".n" + num).classList.add("active");
     }
+
+    function moveSlider(num) {
+        updateActiveClass(sliderImages, num);
+        updateActiveClass(sliderDots, num);
+        updateActiveClass(sliderCaptions, num);
+        updateActiveClass(sliderInfoCity, num);
+        updateActiveClass(sliderInfoApartmentArea, num);
+        updateActiveClass(sliderInfoRepairTime, num);
+        updateActiveClass(sliderInfoRepairCost, num);
+    }
+
+    // function moveSlider(num) {
+    //     sliderImages.querySelector(".active").classList.remove("active");
+    //     sliderImages.querySelector(".n" + num).classList.add("active");
+
+    //     sliderDots.querySelector(".active").classList.remove("active");
+    //     sliderDots.querySelector(".n" + num).classList.add("active");
+
+    //     sliderCaptions.querySelector(".active").classList.remove("active");
+    //     sliderCaptions.querySelector(".n" + num).classList.add("active");
+
+    //     sliderInfoCity.querySelector(".active").classList.remove("active");
+    //     sliderInfoCity.querySelector(".n" + num).classList.add("active");
+
+    //     sliderInfoApartmentArea.querySelector(".active").classList.remove("active");
+    //     sliderInfoApartmentArea.querySelector(".n" + num).classList.add("active");
+
+    //     sliderInfoRepairTime.querySelector(".active").classList.remove("active");
+    //     sliderInfoRepairTime.querySelector(".n" + num).classList.add("active");
+
+    //     sliderInfoRepairCost.querySelector(".active").classList.remove("active");
+    //     sliderInfoRepairCost.querySelector(".n" + num).classList.add("active");
+    // }
 
 };
 
